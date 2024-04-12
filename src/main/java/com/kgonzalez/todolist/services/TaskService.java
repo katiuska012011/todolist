@@ -44,8 +44,9 @@ public class TaskService implements ITask, Serializable {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         String query = "DELETE FROM Task t WHERE t.id = :id";
-        em.createQuery(query).setParameter("id", id);
+        em.createQuery(query).setParameter("id", id).executeUpdate();
     }
 }

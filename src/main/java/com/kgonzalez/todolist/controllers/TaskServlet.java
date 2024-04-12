@@ -29,37 +29,44 @@ public class TaskServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String descripcion = req.getParameter("description");
         String completed = req.getParameter("completed");
+        String id = req.getParameter("id");
         if (Objects.isNull(descripcion) || descripcion.isEmpty()) {
             message = "the field can not be emty";
         } else {
             createTask(descripcion, completed);
-            message = "The Task has been succefully";
+            resp.sendRedirect(req.getContextPath() +"/index.jsp");
+        }
+
+        if(Objects.nonNull(id) || !id.isEmpty()){
+            delete(id);
+            resp.sendRedirect(req.getContextPath() +"/index.jsp");
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-   /*     List<Task> tasks = taskService.getAll();
+        List<Task> tasks = taskService.getAll();
         req.setAttribute("tasks", tasks);
-        resp.sendRedirect("/index.jsp");*/
-        resp.setContentType("text/html");
-        PrintWriter out = resp.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
+
+
 
     private void createTask(String des, String comp) {
         try {
             Task task = new Task(des, comp != null);
             taskService.add(task);
-            log.info(task.toString());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+
+    private void delete(String atribute){
+        Long id = Long.parseLong(atribute);
+        taskService.deleteById(id);
     }
 
 }

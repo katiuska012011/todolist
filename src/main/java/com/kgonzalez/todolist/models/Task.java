@@ -4,7 +4,7 @@ package com.kgonzalez.todolist.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "task")
 public class Task {
 
     @Id
@@ -20,6 +20,10 @@ public class Task {
 
     public Task() {
 
+    }
+
+    public Long getId(){
+        return id;
     }
 
     public String getDescription() {
